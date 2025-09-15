@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Playlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .url {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .instructions {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎬 IPTV Playlist Server</h1>
+        <p>Your IPTV channels are now hosted on GitHub Pages!</p>
+    </div>
+    
+    <div class="info">
+        <h2>📺 Your IPTV Playlist URL:</h2>
+        <div class="url" id="playlistUrl">Loading...</div>
+        <p><strong>Total Channels:</strong> 49,258+ channels</p>
+        <p><strong>Status:</strong> ✅ Online and accessible 24/7</p>
+    </div>
+    
+    <div class="instructions">
+        <h2>🎮 How to Use on PS5:</h2>
+        <div class="step">
+            <strong>Step 1:</strong> Open Plex app on your PS5
+        </div>
+        <div class="step">
+            <strong>Step 2:</strong> Go to "Live TV & DVR" settings
+        </div>
+        <div class="step">
+            <strong>Step 3:</strong> Add HDHomeRun device with URL: <span id="hdhomerunUrl">Loading...</span>
+        </div>
+        <div class="step">
+            <strong>Step 4:</strong> Enjoy your 49,258+ channels!
+        </div>
+    </div>
+    
+    <script>
+        // Get the current page URL and construct playlist URL
+        const currentUrl = window.location.href;
+        const baseUrl = currentUrl.replace('/index.html', '');
+        const playlistUrl = baseUrl + '/playlist.m3u';
+        
+        // Update the playlist URL display
+        document.getElementById('playlistUrl').textContent = playlistUrl;
+        
+        // For HDHomeRun emulator, you'll still need to run it locally
+        document.getElementById('hdhomerunUrl').textContent = 'http://YOUR_MAC_IP:6077';
+        
+        console.log('IPTV Playlist URL:', playlistUrl);
+    </script>
+</body>
+</html>
