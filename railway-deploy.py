@@ -102,16 +102,32 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Read the M3U playlist from GitHub Pages
+        # Read the M3U playlist from local file (embedded in the service)
         lineup = []
         try:
-            github_url = "https://emhamed.github.io/IPTV/playlist.m3u"
-            response = requests.get(github_url, timeout=10)
-            if response.status_code == 200:
-                m3u_content = response.text
+            # Try to read from local file first
+            with open('smaller_playlist.m3u', 'r', encoding='utf-8') as f:
+                m3u_content = f.read()
                 lineup = self.parse_m3u_to_lineup(m3u_content)
-            else:
-                # Fallback to sample
+        except FileNotFoundError:
+            # Fallback to GitHub Pages
+            try:
+                github_url = "https://emhamed.github.io/IPTV/smaller_playlist.m3u"
+                response = requests.get(github_url, timeout=10)
+                if response.status_code == 200:
+                    m3u_content = response.text
+                    lineup = self.parse_m3u_to_lineup(m3u_content)
+                else:
+                    # Final fallback to sample
+                    lineup = [
+                        {
+                            "GuideNumber": "1",
+                            "GuideName": "Sample Channel 1",
+                            "URL": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
+                        }
+                    ]
+            except Exception as e:
+                print(f"Error reading playlist: {e}")
                 lineup = [
                     {
                         "GuideNumber": "1",
@@ -119,15 +135,6 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
                         "URL": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
                     }
                 ]
-        except Exception as e:
-            print(f"Error reading playlist: {e}")
-            lineup = [
-                {
-                    "GuideNumber": "1",
-                    "GuideName": "Sample Channel 1",
-                    "URL": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
-                }
-            ]
         
         self.wfile.write(json.dumps(lineup).encode('utf-8'))
 
