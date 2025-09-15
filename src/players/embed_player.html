@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Embed Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: white;
+        }
+        
+        .embed-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        .player-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .player-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .channel-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .channel-select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: #000;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .controls {
+            padding: 15px 20px;
+            background: #222;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .playlist-info {
+            padding: 15px 20px;
+            background: #333;
+            text-align: center;
+        }
+        
+        .playlist-links {
+            margin-top: 10px;
+        }
+        
+        .playlist-link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        
+        .playlist-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+        }
+        
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        @media (max-width: 600px) {
+            .embed-container {
+                border-radius: 0;
+            }
+            
+            .video-container {
+                height: 300px;
+            }
+            
+            .player-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="embed-container">
+        <div class="player-header">
+            <div class="player-title">🎬 IPTV Player</div>
+            <div class="channel-selector">
+                <label for="channelSelect">Channel:</label>
+                <select id="channelSelect" class="channel-select">
+                    <option value="">Select a channel...</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="video-container">
+            <video id="videoPlayer" class="video-player" controls>
+                <source src="" type="application/x-mpegURL">
+                Your browser does not support the video tag.
+            </video>
+            <div id="loading" class="loading" style="display: none;">Loading...</div>
+            <div id="error" class="error" style="display: none;"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="playPause()">▶️ Play</button>
+            <button class="control-btn" onclick="stopVideo()">⏹️ Stop</button>
+            <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        </div>
+        
+        <div class="playlist-info">
+            <div id="currentChannel">Select a channel to start streaming</div>
+            <div class="playlist-links">
+                <a href="http://localhost:8000/playlist.m3u" class="playlist-link" target="_blank">📋 M3U Playlist</a>
+                <a href="http://localhost:8000/epg.xml" class="playlist-link" target="_blank">📅 EPG Guide</a>
+                <a href="http://localhost:8000/" class="playlist-link" target="_blank">🌐 Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let channels = [];
+        let currentChannel = null;
+        let videoPlayer = document.getElementById('videoPlayer');
+        let channelSelect = document.getElementById('channelSelect');
+        let isPlaying = false;
+
+        // Load channels
+        async function loadChannels() {
+            try {
+                showLoading(true);
+                const response = await fetch('http://localhost:8000/api/channels');
+                const data = await response.json();
+                channels = data.channels;
+                
+                // Populate channel selector
+                channelSelect.innerHTML = '<option value="">Select a channel...</option>';
+                channels.forEach((channel, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${channel.name} - ${channel.category}`;
+                    channelSelect.appendChild(option);
+                });
+                
+                showLoading(false);
+            } catch (error) {
+                console.error('Error loading channels:', error);
+                showError('Error loading channels. Make sure the IPTV server is running.');
+            }
+        }
+
+        // Channel selection
+        channelSelect.addEventListener('change', function() {
+            const selectedIndex = this.value;
+            if (selectedIndex !== '') {
+                const channel = channels[selectedIndex];
+                playChannel(channel);
+            }
+        });
+
+        // Play channel
+        function playChannel(channel) {
+            currentChannel = channel;
+            document.getElementById('currentChannel').textContent = `${channel.name} - ${channel.category}`;
+            
+            showLoading(true);
+            hideError();
+            
+            // Clear previous HLS instance
+            if (window.hls) {
+                window.hls.destroy();
+                window.hls = null;
+            }
+
+            // Check if HLS is supported
+            if (Hls.isSupported()) {
+                // Use HLS.js for better compatibility
+                window.hls = new Hls({
+                    debug: false,
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90
+                });
+                
+                window.hls.loadSource(channel.url);
+                window.hls.attachMedia(videoPlayer);
+                
+                window.hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('HLS manifest parsed, starting playback');
+                    videoPlayer.play().then(() => {
+                        isPlaying = true;
+                        updatePlayButton();
+                        showLoading(false);
+                    }).catch(error => {
+                        console.error('Error playing video:', error);
+                        showError('Error playing channel. The stream might not be available.');
+                        showLoading(false);
+                    });
+                });
+                
+                window.hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('HLS Error:', data);
+                    if (data.fatal) {
+                        showError('Error playing channel. The stream might not be available.');
+                        showLoading(false);
+                    }
+                });
+                
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                videoPlayer.src = channel.url;
+                videoPlayer.load();
+                videoPlayer.play().then(() => {
+                    isPlaying = true;
+                    updatePlayButton();
+                    showLoading(false);
+                }).catch(error => {
+                    console.error('Error playing video:', error);
+                    showError('Error playing channel. The stream might not be available.');
+                    showLoading(false);
+                });
+            } else {
+                showError('HLS is not supported in this browser. Please use Chrome, Firefox, or Safari.');
+                showLoading(false);
+            }
+        }
+
+        // Video controls
+        function playPause() {
+            if (isPlaying) {
+                videoPlayer.pause();
+                isPlaying = false;
+            } else {
+                videoPlayer.play();
+                isPlaying = true;
+            }
+            updatePlayButton();
+        }
+
+        function stopVideo() {
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            isPlaying = false;
+            updatePlayButton();
+        }
+
+        function updatePlayButton() {
+            const btn = document.querySelector('.control-btn');
+            btn.textContent = isPlaying ? '⏸️ Pause' : '▶️ Play';
+        }
+
+        function toggleFullscreen() {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.webkitRequestFullscreen) {
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) {
+                videoPlayer.msRequestFullscreen();
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Video event listeners
+        videoPlayer.addEventListener('play', () => {
+            isPlaying = true;
+            updatePlayButton();
+        });
+
+        videoPlayer.addEventListener('pause', () => {
+            isPlaying = false;
+            updatePlayButton();
+        });
+
+        videoPlayer.addEventListener('error', (e) => {
+            console.error('Video error:', e);
+            showError('Error loading video stream. The channel might be offline.');
+        });
+
+        // Initialize
+        loadChannels();
+    </script>
+</body>
+</html>

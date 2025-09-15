@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Channels - IPTV Server</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .channel-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .channel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .channel-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .category-badge {
+            font-size: 0.8em;
+            padding: 4px 8px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            padding: 8px 16px;
+        }
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+        }
+        .stats-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-tv me-2"></i>IPTV Server - All Channels
+            </span>
+            <div>
+                <a href="/" class="btn btn-outline-light me-2">
+                    <i class="fas fa-home me-1"></i>Dashboard
+                </a>
+                <a href="/playlist.m3u" class="btn btn-outline-light me-2">
+                    <i class="fas fa-download me-1"></i>Download Playlist
+                </a>
+                <a href="/player" class="btn btn-outline-light">
+                    <i class="fas fa-play me-1"></i>Web Player
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="stats-header text-center">
+            <h2><i class="fas fa-tv me-2"></i>All TV Channels</h2>
+            <p class="mb-0">Total: {{ channels|length }} channels available</p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search channels...">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="News">News</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Documentary">Documentary</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Music">Music</option>
+                    <option value="Business">Business</option>
+                    <option value="Educational">Educational</option>
+                    <option value="International">International</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Channels Grid -->
+        <div class="row" id="channelsGrid">
+            {% for channel in channels %}
+            <div class="col-md-6 col-lg-4 channel-item" data-category="{{ channel.category }}" data-name="{{ channel.name|lower }}">
+                <div class="card channel-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ channel.logo or '/static/default-channel.png' }}" 
+                                 class="channel-logo me-3" alt="{{ channel.name }}"
+                                 onerror="this.src='/static/default-channel.png'">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">{{ channel.name }}</h5>
+                                <span class="badge bg-primary category-badge">{{ channel.category }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-globe me-1"></i>{{ channel.country }} • 
+                                <i class="fas fa-language me-1"></i>{{ channel.language }}
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="fas fa-tv me-1"></i>{{ channel.group_title }}
+                            </small>
+                            <div>
+                                <button class="btn btn-sm btn-custom" onclick="playChannel('{{ channel.url }}', '{{ channel.name }}')">
+                                    <i class="fas fa-play me-1"></i>Play
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center mt-5" style="display: none;">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No channels found</h4>
+            <p class="text-muted">Try adjusting your search or filter criteria</p>
+        </div>
+    </div>
+
+    <!-- Channel Player Modal -->
+    <div class="modal fade" id="playerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="playerModalTitle">Channel Player</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ratio ratio-16x9">
+                        <video id="channelPlayer" controls autoplay>
+                            <source id="channelSource" src="" type="application/x-mpegURL">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="/player" class="btn btn-custom" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i>Open in Full Player
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', filterChannels);
+        document.getElementById('categoryFilter').addEventListener('change', filterChannels);
+
+        function filterChannels() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const channelItems = document.querySelectorAll('.channel-item');
+            let visibleCount = 0;
+
+            channelItems.forEach(item => {
+                const channelName = item.dataset.name;
+                const channelCategory = item.dataset.category;
+                
+                const matchesSearch = channelName.includes(searchTerm);
+                const matchesCategory = !categoryFilter || channelCategory === categoryFilter;
+                
+                if (matchesSearch && matchesCategory) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show/hide no results message
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        function playChannel(url, name) {
+            document.getElementById('playerModalTitle').textContent = name;
+            const video = document.getElementById('channelPlayer');
+            const source = document.getElementById('channelSource');
+            
+            // Clear previous HLS instance
+            if (window.hls) {
+                window.hls.destroy();
+                window.hls = null;
+            }
+            
+            // Check if HLS is supported
+            if (Hls.isSupported()) {
+                // Use HLS.js for better compatibility
+                window.hls = new Hls({
+                    debug: false,
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90
+                });
+                
+                window.hls.loadSource(url);
+                window.hls.attachMedia(video);
+                
+                window.hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('HLS manifest parsed, starting playback');
+                    video.play().catch(error => {
+                        console.error('Error playing video:', error);
+                        alert('Error playing channel. The stream might not be available.');
+                    });
+                });
+                
+                window.hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('HLS Error:', data);
+                    if (data.fatal) {
+                        alert('Error playing channel. The stream might not be available.');
+                    }
+                });
+                
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                source.src = url;
+                video.load();
+                video.play().catch(error => {
+                    console.error('Error playing video:', error);
+                    alert('Error playing channel. The stream might not be available.');
+                });
+            } else {
+                alert('HLS is not supported in this browser. Please use Chrome, Firefox, or Safari.');
+            }
+            
+            const playerModal = new bootstrap.Modal(document.getElementById('playerModal'));
+            playerModal.show();
+        }
+    </script>
+</body>
+</html>

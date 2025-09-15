@@ -3,88 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Playlist</title>
+    <title>🎬 IPTV Server - 49,000+ Channels</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
             max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-        .header {
             text-align: center;
-            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-        .info {
-            background-color: #2a2a2a;
-            padding: 20px;
-            border-radius: 10px;
+        
+        h1 {
+            font-size: 3em;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        .url {
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            word-break: break-all;
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
         }
-        .instructions {
-            background-color: #2a2a2a;
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        
+        .playlist-url {
+            background: rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 10px;
+            margin: 30px 0;
+            border: 2px solid #ffd700;
         }
-        .step {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #333;
+        
+        .url-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            word-break: break-all;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .copy-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #45a049;
+        }
+        
+        .instructions {
+            text-align: left;
+            margin: 30px 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+        }
+        
+        .instructions h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .emoji {
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🎬 IPTV Playlist Server</h1>
-        <p>Your IPTV channels are now hosted on GitHub Pages!</p>
-    </div>
-    
-    <div class="info">
-        <h2>📺 Your IPTV Playlist URL:</h2>
-        <div class="url" id="playlistUrl">Loading...</div>
-        <p><strong>Total Channels:</strong> 49,258+ channels</p>
-        <p><strong>Status:</strong> ✅ Online and accessible 24/7</p>
-    </div>
-    
-    <div class="instructions">
-        <h2>🎮 How to Use on PS5:</h2>
-        <div class="step">
-            <strong>Step 1:</strong> Open Plex app on your PS5
+    <div class="container">
+        <h1>🎬 IPTV Server</h1>
+        <p style="font-size: 1.3em; margin-bottom: 30px;">Your Personal Streaming Server with 49,000+ Channels</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">49,258</div>
+                <div class="stat-label">Total Channels</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15,000+</div>
+                <div class="stat-label">Movies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8,000+</div>
+                <div class="stat-label">TV Shows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">26,000+</div>
+                <div class="stat-label">Live TV</div>
+            </div>
         </div>
-        <div class="step">
-            <strong>Step 2:</strong> Go to "Live TV & DVR" settings
+        
+        <div class="playlist-url">
+            <h3>📺 Your IPTV Playlist URL</h3>
+            <div class="url-box" id="playlistUrl">https://emhamed.github.io/IPTV/playlist.m3u</div>
+            <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
         </div>
-        <div class="step">
-            <strong>Step 3:</strong> Add HDHomeRun device with URL: <span id="hdhomerunUrl">Loading...</span>
+        
+        <div class="instructions">
+            <h3>🎮 How to Use on PlayStation 5</h3>
+            <ol>
+                <li><span class="emoji">📱</span> Download <strong>IPTV Smarters Pro</strong> from PlayStation Store</li>
+                <li><span class="emoji">➕</span> Open the app and click "Add Playlist"</li>
+                <li><span class="emoji">🔗</span> Paste the URL above: <code>https://emhamed.github.io/IPTV/playlist.m3u</code></li>
+                <li><span class="emoji">✅</span> Click "Add" and enjoy 49,000+ channels!</li>
+            </ol>
+            
+            <h3 style="margin-top: 25px;">🖥️ Alternative: VLC Media Player</h3>
+            <ol>
+                <li><span class="emoji">📱</span> Download <strong>VLC</strong> from PlayStation Store</li>
+                <li><span class="emoji">🌐</span> Open VLC and select "Open Network Stream"</li>
+                <li><span class="emoji">🔗</span> Enter the playlist URL above</li>
+                <li><span class="emoji">▶️</span> Browse and watch your channels!</li>
+            </ol>
         </div>
-        <div class="step">
-            <strong>Step 4:</strong> Enjoy your 49,258+ channels!
+        
+        <div class="footer">
+            <p>🚀 <strong>Always Online</strong> - Your playlist is hosted on GitHub Pages</p>
+            <p>💻 <strong>Works Everywhere</strong> - PS5, Smart TV, Phone, Computer</p>
+            <p>🔒 <strong>Secure & Private</strong> - No data collection, direct streaming</p>
         </div>
     </div>
     
     <script>
-        // Get the current page URL and construct playlist URL
-        const currentUrl = window.location.href;
-        const baseUrl = currentUrl.replace('/index.html', '');
-        const playlistUrl = baseUrl + '/playlist.m3u';
+        function copyUrl() {
+            const url = document.getElementById('playlistUrl').textContent;
+            navigator.clipboard.writeText(url).then(function() {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#4CAF50';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#4CAF50';
+                }, 2000);
+            });
+        }
         
-        // Update the playlist URL display
-        document.getElementById('playlistUrl').textContent = playlistUrl;
-        
-        // For HDHomeRun emulator, you'll still need to run it locally
-        document.getElementById('hdhomerunUrl').textContent = 'http://YOUR_MAC_IP:6077';
-        
-        console.log('IPTV Playlist URL:', playlistUrl);
+        // Add some animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
     </script>
 </body>
 </html>
