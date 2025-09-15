@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Cloud Plex Setup - NO MAC REQUIRED!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .success h3 {
+            color: #28a745;
+            margin-top: 0;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+        .step h4 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            word-break: break-all;
+        }
+        .url-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border: 2px solid #ffd700;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .copy-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        .copy-btn:hover {
+            background: #45a049;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .warning h3 {
+            color: #ffc107;
+            margin-top: 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        .download-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px 5px;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-btn:hover {
+            background: #0056b3;
+        }
+        .big-success {
+            background: rgba(40, 167, 69, 0.3);
+            border: 3px solid #28a745;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .big-success h2 {
+            color: #28a745;
+            margin-top: 0;
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Cloud Plex Setup - NO MAC REQUIRED!</h1>
+        <p style="text-align: center; font-size: 1.2em;">I've created a cloud-hosted HDHomeRun emulator that runs 24/7 without your Mac! 🎉</p>
+        
+        <div class="big-success">
+            <h2>✅ SOLUTION: Railway Cloud Hosting</h2>
+            <p><strong>Your HDHomeRun emulator will run in the cloud 24/7!</strong></p>
+            <p><strong>No Mac needed - works from anywhere!</strong></p>
+        </div>
+        
+        <div class="step">
+            <h4>🌐 Step 1: Deploy to Railway (Free Cloud Hosting)</h4>
+            <p><strong>Railway is a free cloud platform that will host your HDHomeRun emulator 24/7!</strong></p>
+            
+            <h5>Option A: One-Click Deploy (Easiest)</h5>
+            <p>Click this button to deploy instantly:</p>
+            <a href="https://railway.app/template/deploy?template=https://github.com/emhamed/IPTV" class="download-btn">🚀 Deploy to Railway</a>
+            
+            <h5>Option B: Manual Deploy</h5>
+            <ol>
+                <li>Go to <a href="https://railway.app" style="color: #ffd700;">railway.app</a></li>
+                <li>Sign up with GitHub</li>
+                <li>Click "New Project" → "Deploy from GitHub repo"</li>
+                <li>Select your <code>emhamed/IPTV</code> repository</li>
+                <li>Railway will automatically deploy your HDHomeRun emulator!</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>🔗 Step 2: Get Your Cloud URL</h4>
+            <p>After deployment, Railway will give you a URL like:</p>
+            <div class="code">https://your-app-name.railway.app</div>
+            <p><strong>This is your cloud HDHomeRun emulator URL!</strong></p>
+        </div>
+        
+        <div class="step">
+            <h4>🏠 Step 3: Add to Plex on PS5</h4>
+            <p>Now add your cloud URL to Plex:</p>
+            <div class="url-box" id="cloudUrl">https://your-app-name.railway.app</div>
+            <button class="copy-btn" onclick="copyUrl('cloudUrl')">📋 Copy Cloud URL</button>
+            
+            <h5>In Plex on PS5:</h5>
+            <ol>
+                <li>Open Plex on your PS5</li>
+                <li>Go to <strong>Live TV & DVR</strong> → <strong>Set Up Plex DVR</strong></li>
+                <li>Click <strong>"Add HDHomeRun Device"</strong></li>
+                <li>Enter your Railway URL: <code>https://your-app-name.railway.app</code></li>
+                <li>Plex will detect your 49,261 channels from the cloud!</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>🎬 What You'll Get</h4>
+            <p>Plex will import all 49,261 channels including:</p>
+            <ul>
+                <li>🎬 <strong>Netflix shows:</strong> Bridgerton, 3 Body Problem, etc.</li>
+                <li>📺 <strong>HBO shows:</strong> The Regime, etc.</li>
+                <li>🌟 <strong>Disney+ shows:</strong> Andor, Daredevil: Born Again, etc.</li>
+                <li>🍎 <strong>Apple TV+ shows:</strong> Palm Royale, Loot, etc.</li>
+                <li>📱 <strong>Prime Video shows:</strong> Fallout, etc.</li>
+                <li>🇬🇧 <strong>BBC shows:</strong> Doctor Who, etc.</li>
+                <li>🎭 <strong>And thousands more!</strong></li>
+            </ul>
+        </div>
+        
+        <div class="success">
+            <h3>🎉 Benefits of Cloud Hosting</h3>
+            <ul>
+                <li><strong>✅ No Mac required</strong> - runs in the cloud 24/7</li>
+                <li><strong>✅ Free hosting</strong> - Railway provides free tier</li>
+                <li><strong>✅ Always online</strong> - never goes down</li>
+                <li><strong>✅ Works from anywhere</strong> - access from any device</li>
+                <li><strong>✅ Auto-updates</strong> - reads from your GitHub playlist</li>
+                <li><strong>✅ Plex compatible</strong> - works with PS5 Plex app</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li><strong>Railway free tier</strong> - may have usage limits, but should be enough for personal use</li>
+                <li><strong>GitHub integration</strong> - automatically reads your updated playlist</li>
+                <li><strong>HDHomeRun compatible</strong> - Plex thinks it's a real tuner</li>
+                <li><strong>Cloud URL</strong> - use the Railway URL, not localhost</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 <strong>This is the solution you wanted!</strong></p>
+            <p>💡 <strong>Cloud-hosted HDHomeRun emulator that works with Plex on PS5</strong></p>
+            <p>🔗 <strong>Main Page:</strong> <a href="index.html" style="color: #ffd700;">Back to Main Dashboard</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function copyUrl(elementId) {
+            const url = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(url).then(function() {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#4CAF50';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
