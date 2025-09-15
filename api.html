@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDHomeRun API - GitHub Pages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .url {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 3px;
+            word-break: break-all;
+        }
+        .method {
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .method.get { background: #007bff; }
+        .method.post { background: #ffc107; color: #000; }
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 HDHomeRun API for GitHub Pages</h1>
+        <p>This page provides HDHomeRun-compatible API endpoints for Plex integration.</p>
+        
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Device Discovery</h3>
+            <div class="url">https://emhamed.github.io/IPTV/discover.json</div>
+            <p>Returns device information for HDHomeRun discovery.</p>
+            <div class="response" id="discover-response">Loading...</div>
+        </div>
+        
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Channel Lineup</h3>
+            <div class="url">https://emhamed.github.io/IPTV/lineup.json</div>
+            <p>Returns the complete channel lineup (49,261 channels).</p>
+            <div class="response" id="lineup-response">Loading...</div>
+        </div>
+        
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Lineup Status</h3>
+            <div class="url">https://emhamed.github.io/IPTV/lineup_status.json</div>
+            <p>Returns the current lineup status.</p>
+            <div class="response" id="status-response">Loading...</div>
+        </div>
+        
+        <div class="endpoint">
+            <h3>📋 For Plex Setup:</h3>
+            <p>Use this URL in Plex Live TV & DVR setup:</p>
+            <div class="url">https://emhamed.github.io/IPTV/</div>
+            <p><strong>Note:</strong> Plex will automatically append the required endpoints.</p>
+        </div>
+    </div>
+
+    <script>
+        // Load and display API responses
+        async function loadAPIResponse(url, elementId) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById(elementId).textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Load all API responses
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAPIResponse('discover.json', 'discover-response');
+            loadAPIResponse('lineup_status.json', 'status-response');
+            
+            // For lineup, show first few channels only (it's huge)
+            fetch('lineup.json')
+                .then(response => response.json())
+                .then(data => {
+                    const sample = data.slice(0, 5);
+                    const summary = {
+                        total_channels: data.length,
+                        sample_channels: sample
+                    };
+                    document.getElementById('lineup-response').textContent = JSON.stringify(summary, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('lineup-response').textContent = `Error: ${error.message}`;
+                });
+        });
+    </script>
+</body>
+</html>
