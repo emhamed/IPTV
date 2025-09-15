@@ -18,7 +18,9 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         
-        if path == '/discover.json':
+        if path == '/' or path == '':
+            self.send_welcome()
+        elif path == '/discover.json':
             self.send_discover()
         elif path == '/lineup.json':
             self.send_lineup()
@@ -29,6 +31,45 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
         else:
             self.send_error(404, "Not Found")
     
+    def send_welcome(self):
+        """Send welcome page"""
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        
+        html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Cloud IPTV Tuner</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
+                .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                h1 { color: #333; }
+                .status { color: #28a745; font-weight: bold; }
+                .url { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🎉 Cloud IPTV Tuner is Live!</h1>
+                <p class="status">✅ HDHomeRun Emulator Running Successfully</p>
+                <p><strong>Your Plex URL:</strong></p>
+                <div class="url">https://iptv-tuner.onrender.com</div>
+                <p><strong>Available Endpoints:</strong></p>
+                <ul>
+                    <li><a href="/discover.json">/discover.json</a> - Device discovery</li>
+                    <li><a href="/lineup.json">/lineup.json</a> - Channel lineup</li>
+                    <li><a href="/lineup_status.json">/lineup_status.json</a> - Status</li>
+                </ul>
+                <p><strong>For Plex:</strong> Add this URL to Plex Live TV & DVR settings</p>
+            </div>
+        </body>
+        </html>
+        """
+        self.wfile.write(html.encode('utf-8'))
+    
     def send_discover(self):
         """Send discover.json response"""
         self.send_response(200)
@@ -36,8 +77,8 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Get the Railway URL from environment
-        base_url = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'https://your-app.railway.app')
+        # Get the Render URL from environment
+        base_url = os.environ.get('RENDER_EXTERNAL_URL', 'https://iptv-tuner.onrender.com')
         if not base_url.startswith('http'):
             base_url = f'https://{base_url}'
             
@@ -96,8 +137,8 @@ class CloudHDHomeRunHandler(BaseHTTPRequestHandler):
         lines = m3u_content.splitlines()
         channel_num = 1
         
-        # Get the Railway URL from environment
-        base_url = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'https://your-app.railway.app')
+        # Get the Render URL from environment
+        base_url = os.environ.get('RENDER_EXTERNAL_URL', 'https://iptv-tuner.onrender.com')
         if not base_url.startswith('http'):
             base_url = f'https://{base_url}'
         
