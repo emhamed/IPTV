@@ -1,0 +1,10 @@
+{
+  "FriendlyName": "IPTV Tuner",
+  "ModelNumber": "HDTC-2US",
+  "FirmwareName": "hdhomerun_cablecard",
+  "FirmwareVersion": "20200101",
+  "DeviceID": "12345678",
+  "DeviceAuth": "test1234",
+  "BaseURL": "https://emhamed.github.io/IPTV/",
+  "LineupURL": "https://emhamed.github.io/IPTV/lineup.json"
+}

@@ -162,6 +162,12 @@
             <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
         </div>
         
+        <div class="playlist-url" style="margin-top: 20px;">
+            <h3>🏠 Plex HDHomeRun URL (No Mac Required!)</h3>
+            <div class="url-box" id="plexUrl">https://emhamed.github.io/IPTV/</div>
+            <button class="copy-btn" onclick="copyPlexUrl()">📋 Copy Plex URL</button>
+        </div>
+        
         <div class="instructions">
             <h3>🎮 How to Use on PlayStation 5</h3>
             <ol>
@@ -169,6 +175,15 @@
                 <li><span class="emoji">➕</span> Open the app and click "Add Playlist"</li>
                 <li><span class="emoji">🔗</span> Paste the URL above: <code>https://emhamed.github.io/IPTV/playlist.m3u</code></li>
                 <li><span class="emoji">✅</span> Click "Add" and enjoy 49,000+ channels!</li>
+            </ol>
+            
+            <h3 style="margin-top: 25px;">🏠 Plex Integration (No Mac Required!)</h3>
+            <ol>
+                <li><span class="emoji">💻</span> Install <strong>Plex Media Server</strong> on your computer</li>
+                <li><span class="emoji">🌐</span> Go to Plex Web Interface: <code>http://localhost:32400/web</code></li>
+                <li><span class="emoji">📺</span> Click "Live TV & DVR" → "Set Up Plex DVR"</li>
+                <li><span class="emoji">🔗</span> Enter this URL: <code>https://emhamed.github.io/IPTV/</code></li>
+                <li><span class="emoji">✅</span> Plex will detect 49,261 channels automatically!</li>
             </ol>
             
             <h3 style="margin-top: 25px;">🖥️ Alternative: VLC Media Player</h3>
@@ -198,6 +213,21 @@
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = '#4CAF50';
+                }, 2000);
+            });
+        }
+        
+        function copyPlexUrl() {
+            const url = document.getElementById('plexUrl').textContent;
+            navigator.clipboard.writeText(url).then(function() {
+                const btns = document.querySelectorAll('.copy-btn');
+                const plexBtn = btns[1]; // Second copy button
+                const originalText = plexBtn.textContent;
+                plexBtn.textContent = '✅ Copied!';
+                plexBtn.style.background = '#4CAF50';
+                setTimeout(() => {
+                    plexBtn.textContent = originalText;
+                    plexBtn.style.background = '#4CAF50';
                 }, 2000);
             });
         }
